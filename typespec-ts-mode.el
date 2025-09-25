@@ -221,6 +221,16 @@ quotes, whichever is greater.
   (setq-local electric-indent-chars (append "{}" electric-indent-chars))
 
   ;; imenu
+  (setq-local treesit-defun-type-regexp (regexp-opt
+                                         '("alias_statement"
+                                           "const_statement"
+                                           "enum_statement"
+                                           "interface_statement"
+                                           "namespace_statement"
+                                           "operation_statement"
+                                           "scalar_statement"
+                                           "union_statement"
+                                           "model_statement")))
   (setq-local treesit-defun-name-function #'typespec-ts-mode--defun-name)
   (setq-local treesit-simple-imenu-settings
               `(("Alias" "\\`alias_statement\\'")
