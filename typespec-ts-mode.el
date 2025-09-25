@@ -145,6 +145,20 @@
   :safe 'integerp
   :group 'typespec)
 
+(defun typespec-ts-mode--multi-line-string-indent (n parent bol &rest rest)
+  "Return the indent for the current multi-line string line.
+
+This is either the current indentation or the indentation of the closing triple
+quotes, whichever is greater.
+"
+  (let ((node (treesit-node-at (point))))
+    (when (and node (string= (treesit-node-type node) "triple_quoted_string_fragment"))
+      (let ((minimum-identation (save-excursion
+                                  (goto-char (treesit-node-end node))
+                                  (current-indentation))))
+
+        (max minimum-identation bol)))))
+
 (defvar typespec-ts-mode--syntax-table
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?_ "_" table)
@@ -166,8 +180,19 @@
      ((node-is "}") parent-bol 0)
      ((node-is "]") parent-bol 0)
      ((node-is ")") parent-bol 0)
-     (no-node parent-bol typespec-ts-mode-indent-offset)
-     (catch-all parent-bol typespec-ts-mode-indent-offset))))
+     ((and (parent-is "multi_line_comment") c-ts-common-looking-at-star) c-ts-common-comment-start-after-first-star -1)
+     ((parent-is "single_line_comment") prev-adaptive-prefix 0)
+     ((parent-is "multi_line_comment") prev-adaptive-prefix 0)
+     ((parent-is "union_body") parent-bol typespec-ts-mode-indent-offset)
+     ((parent-is "operation_arguments") parent-bol typespec-ts-mode-indent-offset)
+     ((parent-is "enum_body") parent-bol typespec-ts-mode-indent-offset)
+     ((parent-is "model_body") parent-bol 0)
+     ((parent-is "model_expression") parent-bol typespec-ts-mode-indent-offset)
+     ((parent-is "object_value") parent-bol typespec-ts-mode-indent-offset)
+     ((parent-is "value_list") parent-bol 0)
+     ((parent-is "string_fragment") nix-ts-indent-multiline-string 0)
+     ((parent-is "triple_quoted_string_fragment") typespec-ts-mode--multi-line-string-indent 0)
+     ((parent-is "interface_body") parent-bol typespec-ts-mode-indent-offset))))
 
 (defun typespec-ts-mode--defun-name (node)
   "Find name of NODE."
