@@ -98,7 +98,7 @@
    :feature 'keyword
    ;; https://github.com/microsoft/typespec/blob/main/packages/spec/src/spec.emu.html#L34
    '(["import" "model" "namespace" "op" "extends" "using" "interface" "union"
-      "dec" "fn" "void" "never" "unknown" "alias" "enum" "scalar" "is"
+      "dec" "fn" "void" "never" "unknown" "alias" "enum" "scalar" "is" "const"
       (decorator_modifiers) (function_modifiers)] @font-lock-keyword-face)
 
    :language 'typespec
