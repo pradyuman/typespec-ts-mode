@@ -22,6 +22,7 @@
 ;;; Code:
 
 (require 'treesit)
+(require 'c-ts-common)
 (eval-when-compile (require 'cl-lib))
 (eval-when-compile (require 'rx))
 
@@ -184,9 +185,7 @@
   (treesit-parser-create 'typespec)
 
   ;; Comments
-  (setq-local comment-start "//"
-              comment-end ""
-              comment-start-skip (rx "//" (* (syntax whitespace))))
+  (c-ts-common-comment-setup)
 
   ;; Font Lock
   (setq-local treesit-font-lock-feature-list typespec-ts-mode--font-lock-feature-list
