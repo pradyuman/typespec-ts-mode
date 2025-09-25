@@ -144,6 +144,21 @@
   :safe 'integerp
   :group 'typespec)
 
+(defvar typespec-ts-mode--syntax-table
+  (let ((table (make-syntax-table)))
+    (modify-syntax-entry ?_ "_" table)
+    (modify-syntax-entry ?= "." table)
+    (modify-syntax-entry ?& "." table)
+    (modify-syntax-entry ?| "." table)
+    (modify-syntax-entry ?` "\"" table)
+    ;; comments like c-mode(s)
+    (modify-syntax-entry ?/ ". 124b" table)
+    (modify-syntax-entry ?* ". 23" table)
+    (modify-syntax-entry ?\n "> b" table)
+    (modify-syntax-entry ?\^m "> b" table)
+    table)
+  "Syntax table for `typespec-ts-mode'.")
+
 (defvar typespec-ts-mode--indent-rules
   '((typespec
      ((parent-is "source_file") parent 0)
@@ -161,6 +176,7 @@
 (define-derived-mode typespec-ts-mode prog-mode "TypeSpec"
   "Major mode for editing TypeSpec files."
   :group 'typespec
+  :syntax-table typespec-ts-mode--syntax-table
 
   (unless (treesit-available-p)
     (error "Tree-sitter is not available"))
