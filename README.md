@@ -14,7 +14,7 @@ You'll also need the tree-sitter grammar [here](https://github.com/happenslol/tr
 ```elisp
 (add-to-list
  'treesit-language-source-alist
- '(typespec "https://github.com/happenslol/tree-sitter-typespec")
+ '(typespec "https://github.com/happenslol/tree-sitter-typespec"))
 ```
 
 Then run `M-x treesit-install-language-grammar [RET] typespec` to install it.

@@ -13,28 +13,33 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, tree-sitter-typespec }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      tree-sitter-typespec,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let pkgs = import nixpkgs { inherit system; };
-      in {
+      in
+      {
         packages = rec {
-          default = typespec-ts-mode-emacs29;
+          default = typespec-ts-mode;
 
           typespec-ts-grammar = pkgs.tree-sitter.buildGrammar {
-            language = "tree-sitter-typespec";
+            language = "typespec";
             version = tree-sitter-typespec.rev;
             src = tree-sitter-typespec;
           };
 
-          typespec-ts-mode = emacsPkgs:
-            emacsPkgs.trivialBuild {
-              pname = "typespec-ts-mode";
-              version = "0.1";
-              src = ./.;
-            };
-
-          typespec-ts-mode-emacs29 =
-            typespec-ts-mode (pkgs.emacsPackagesFor pkgs.emacs29);
+          typespec-ts-mode = (pkgs.emacsPackagesFor pkgs.emacs30).trivialBuild {
+            pname = "typespec-ts-mode";
+            version = "0.2";
+            src = ./.;
+          };
         };
-      });
+      }
+    );
 }
